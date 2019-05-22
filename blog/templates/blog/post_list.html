@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    {% for post in post_list %}
+        <div class="post">
+            <h1><a href="{% url 'Post_detail' pk=post.pk %}" style = 'color:inherit'>{{ post.title|capfirst}}</a></h1>
+            <div class="date">
+                <p>Published on : {{ post.published_date|date:'D M Y'}} By : {{post.author|capfirst}} </p>
+            </div>
+            <a href="{% url 'Post_detail' pk=post.pk %}">Comment: {{post.approve_comment.count}} </a>
+        </div>
+    {% endfor %} 
+   
+
+{% endblock content %}

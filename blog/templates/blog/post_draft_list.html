@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    {% for post in draft %}
+        {% if post.author == request.user %}
+            <div class="drafts">
+                <h1><a href="{% url 'Post_detail' pk=post.pk%} ">{{post.title|safe|capfirst}} </a></h1>
+                <p>By {{ post.author|capfirst}} Created on {{post.create_date}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}
