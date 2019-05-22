@@ -29,6 +29,7 @@
             {% if user.is_authenticated or comment.approved_comment %}
                 {{comment.created_date}}
                 {% if not comment.approved_comment %}
+                    {% if post.author == request.user %}
                     <a class='btn btn-danger' href="{% url 'comment_remove' pk=comment.pk %}">
                         <span class='glyphicon glyphicon-remove'>Remove</span>
                     </a>
@@ -36,11 +37,12 @@
                     <a class='btn btn-success' href="{% url 'comment_approve' pk=comment.pk %}">
                       <span class='glyphicon glyphicon-ok'>Approve</span>
                     </a>
+                    {% endif %}
                 {% endif %}
 
                 <p>{{ comment.text|safe|linebreaksbr}} </p>
                 <p>Posted by: {{comment.author}}</p>
-
+            
             {% endif %}
             {% empty %}
             <p>No comments </p> 
