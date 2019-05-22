@@ -7,6 +7,7 @@ from django.views.generic import (TemplateView, ListView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
+from django import forms 
 #import from own dirs
 from blog.models import Post, Comment
 from blog.forms import PostForm, CommentForm
@@ -27,6 +28,30 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+    # form_class = CommentForm
+
+    # def get_success_url(self):
+    #     return reverse('Post_detail', kwargs={'pk':self.object.id})
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(PostDetailView,self).get_context_data(**kwargs)
+    #     context["form"] = CommentForm(initial={'post':self.object})
+    #     return context
+    # def get_form(self):
+    #     form = self.form_class(instance=self.object)
+    #     return form
+    
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_valid(form)
+    
+    # def form_valid(self, form):
+    #     form.save()
+    #     return super(PostDetailView, self).form_valid(form)
     
 class PostCreateView(LoginRequiredMixin, CreateView):
     login_url = '/login/'
@@ -72,7 +97,9 @@ def post_publish(request, pk):
 @login_required
 def add_comment_to_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    print('checkpoint1')
     if request.method == 'POST':
+        print('checkpoint2')
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -80,8 +107,9 @@ def add_comment_to_post(request, pk):
             comment.save()
             return redirect('Post_detail', pk=post.pk)
     else:
+        print('checkpoint3')
         form = CommentForm()
-    return render(request, 'blog/comment_form.html', {'form':form})
+    return render(request, 'blog/comment_form.html', {'form':form, 'post':post})
 
 
 @login_required

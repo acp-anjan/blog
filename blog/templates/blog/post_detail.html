@@ -22,14 +22,14 @@
     {% endif %}
 
     <hr>
-      <a class='btn btn-primary btn-comment' href="{% url 'add_comment_to_post' pk=post.pk %}">Add Comment</a>
+      {% comment %} <a class='btn btn-primary btn-comment' href="{% url 'add_comment_to_post' pk=post.pk %}">Add Comment</a>  {% endcomment %}
     <div class="contianer">
          {% for comment in post.comments.all %}
             <br>
             {% if user.is_authenticated or comment.approved_comment %}
                 {{comment.created_date}}
-                {% if not comment.approved_comment %}
-                    {% if post.author == request.user %}
+                {% if not comment.approved_comment and post.author == request.user %}
+                    
                     <a class='btn btn-danger' href="{% url 'comment_remove' pk=comment.pk %}">
                         <span class='glyphicon glyphicon-remove'>Remove</span>
                     </a>
@@ -37,7 +37,7 @@
                     <a class='btn btn-success' href="{% url 'comment_approve' pk=comment.pk %}">
                       <span class='glyphicon glyphicon-ok'>Approve</span>
                     </a>
-                    {% endif %}
+                    
                 {% endif %}
 
                 <p>{{ comment.text|safe|linebreaksbr}} </p>
@@ -48,5 +48,19 @@
             <p>No comments </p> 
         {% endfor %} 
     </div> 
+    {% comment %} <div class="container">
+        <div class="jumbotron">
+            <h1>New Comment</h1>
+            <form class='post-form' method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class='save btn btn-default'>Post Comment</button>
+            </form>
+        </div>
+    </div>  {% endcomment %}
+    {% block comment %}
+
+    {% endblock comment %}
+    
 
 {% endblock content %} 
